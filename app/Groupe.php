@@ -171,6 +171,13 @@ class Groupe extends Model
        // code...
     }
 
+    public static function getElelvesIds($id_groupe)
+    {
+        $eleves =  DB::select("select distinct e.id 
+        from eleves e , seances_eleves se ,seances s 
+        where e.id=se.id_eleve and s.id=se.id_seance and s.id_groupe= \"$id_groupe\" ");
+        return $eleves;
 
+    }
     //use HasFactory;
 }

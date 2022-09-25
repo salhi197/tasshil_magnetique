@@ -43,6 +43,7 @@
         <link rel="stylesheet" href="{{ asset('../../assets/plugins/multipleselect/multiple-select.css') }}">
 
         <link href="{{ asset('../../assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
+        <link href="{{ asset('css/toastr.css') }}" rel="stylesheet" />
 
     </head>
 
@@ -319,17 +320,20 @@
 
         <!-- SWEET-ALERT PLUGIN -->
         <script src="{{ asset('../../assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
-        <script src="{{ asset('../../assets/js/sweet-alert.js') }}"></script>        
+        <script src="{{ asset('../../assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+        <script src="{{ asset('js/toastr.min.js') }}"></script>        
 
         <script src="{{ asset('../../assets/plugins/multipleselect/multiple-select.js') }}"></script>
         <script src="{{ asset('../../assets/plugins/multipleselect/multi-select.js') }}"></script>
 
         <!-- ECHART JS -->
-        <script src="{{ asset('../../assets/js/echarts.js') }}"></script>
 
         <!-- ECHART PLUGIN -->
-        <script src="{{ asset('../../assets/plugins/echarts/echarts.js') }}"></script>
         <script>
+
+            $(function() {
+                $("#input_id").focus();
+            });
             $('#input_id').on('change',function(){
             console.log('saz')
             if($('#input_id').val().length >0){
@@ -337,6 +341,22 @@
                 /**
                  * هاد البارتي خليها نفيريفي المتركول ادا يكزيستي بجافا سكريبت قبل ما تبعتو
                  */
+                let matricules = {!! json_encode(Config::get('matricules')) !!};
+                var res = false;
+                matricules.map(function (matricule) {
+                    res = res || matricule.matricule == number;
+                });                          
+
+                console.log(res)
+                if(res==false){
+                    toastr.error('Carte Non valide')
+                    $("#input_id").focus();
+                    $('#input_id').val("")
+                }else{
+                    window.location.href = 'http://localhost:8000/home/scann/'+number;
+                }
+
+
                 // let matricules = [788];
                 //console.log(matricules);
                 // var res = false;
@@ -348,7 +368,7 @@
                 //     // toastr.error('Carte Non valide')
                 //     $('#input_id').val("")
                 // }else{
-                    window.location.href = 'http://localhost:8000/home/scann/'+number;
+                    // window.location.href = 'http://localhost:8000/home/scann/'+number;
                 // }
             }
             });

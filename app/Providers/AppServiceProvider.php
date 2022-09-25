@@ -4,7 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-
+use Config;
+use App\Matricule;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        $matricules = Matricule::all('matricule');
+        Config::set('matricules', $matricules);
+
+
 
         app()->singleton('lang',function (){
             if (auth()->user()) {

@@ -15,8 +15,9 @@ use App\Groupe;
 						<div class="float-left">
 							<h3 class="card-title mb-0">Groupe #{!! $groupe->id !!} {!! $groupe->jour !!} | {!! substr($groupe->heure_debut,0,5) !!}-{!! substr($groupe->heure_fin,0,5) !!}</h3>
 						</div>
-						<div class="float-right">
-							<h3 class="card-title">Date Création: {!! $groupe->created_at !!}</h3>
+						<div class="text-right">
+							<h3 class="card-title">Numéro Séance Actuelle: {!! Groupe::current_seance($groupe->id)%4 !!}  </h3>
+						
 						</div>
 					</div>
 					<hr>
@@ -27,6 +28,8 @@ use App\Groupe;
 							@include('includes.single_groupe.modifier_groupe',['salles'=>$salles,'niveaux'=>$niveaux,'matieres'=>$matieres,'profs'=>$profs,'groupe'=>$groupe])
 
 							<address>
+							Date Création: {!! $groupe->created_at !!}<br>
+
 								Année scolaire : {!! $groupe->annee_scolaire !!}<br>
 								Niveau : {!! $groupe->niveau !!} <br>
 								Matière : {!! $groupe->matiere !!} <br>

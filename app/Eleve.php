@@ -39,7 +39,7 @@ class Eleve extends Model
         
         if(count($dernier_seance_du_groupe)>0)
         {
-            $dernier_seance_du_groupe = $dernier_seance_du_groupe[0]->derniere_seance+1;
+            $dernier_seance_du_groupe = $dernier_seance_du_groupe[0]->derniere_seance;
             //
         }
         else

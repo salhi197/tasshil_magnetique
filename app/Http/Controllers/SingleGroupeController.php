@@ -63,7 +63,7 @@ class SingleGroupeController extends Controller
         }
 
 
-        DB::insert("insert into seances (id_groupe,num) values (\"$id_groupe\",\"$seance_prochaine\" ) ");        
+        DB::insert("insert into seances (id_groupe,num) values (\"$id_groupe\",\"$seance_prochaine\" ) ");
         
         $last = DB::select("select max(id) as last_id from seances where id_groupe = \"$id_groupe\" ");
         
@@ -469,22 +469,31 @@ class SingleGroupeController extends Controller
     {
         $eleve = DB::select("select * from matricules where matricule=$matricule");
         $id_eleve = $eleve[0]->id_eleve;
+
         $id_groupe = $eleve[0]->id_groupe;
 
         $id_dernier_seance_du_groupe = (DB::select("select max(id) as id_derniere_seance from seances where id_groupe = \"$id_groupe\" "));
-        if(count($id_dernier_seance_du_groupe)>0){
+        if(count($id_dernier_seance_du_groupe)>0)
+        {
+
             $id_dernier_seance_du_groupe = $id_dernier_seance_du_groupe[0]->id_derniere_seance;
-        }        
-        (DB::update("update seances_eleves set presence = 1 ,num_seance =num_seance,created_at = now() where id_eleve = \"$id_eleve\" and id_seance = \"$id_dernier_seance_du_groupe\" "));        
+
+        }
+        (DB::update("update seances_eleves set presence =1, created_at = now()  
+        where id_eleve = $id_eleve and id_seance = $id_dernier_seance_du_groupe "));
         
-        return back();
+
+        return view('home.profile');
+
     }
 
     public function cloturer($id_groupe)
     {
-        $id_dernier_seance_du_groupe = (DB::select("select max(id) as id_derniere_seance from seances where id_groupe = \"$id_groupe\" "));
+        $eleves = Groupe::getElelvesIds($id_groupe);
 
-        $num_seance_groupe = DB::select("select max(num) as numero_de_la_derniere_seance_du_groupe from seances where id_groupe = \"$id_groupe\" ");
+        $id_dernier_seance_du_groupe = (DB::select("select max(id) as id_derniere_seance from seances where id_groupe = $id_groupe "));
+
+        $num_seance_groupe = DB::select("select max(num) as numero_de_la_derniere_seance_du_groupe from seances where id_groupe = $id_groupe ");
 
         $num_seance_groupe = $num_seance_groupe[0]->numero_de_la_derniere_seance_du_groupe;
 
@@ -495,6 +504,32 @@ class SingleGroupeController extends Controller
             $id_dernier_seance_du_groupe = $id_dernier_seance_du_groupe[0]->id_derniere_seance;
         }
         DB::insert("insert into seances (id_groupe,num) values (\"$id_groupe\",\"$seance_prochaine\" ) ");        
+
+        $num_seance_groupe = DB::select("select max(num) as numero_de_la_derniere_seance_du_groupe from seances where id_groupe = $id_groupe ");
+        
+        $num_seance_groupe = $num_seance_groupe[0]->numero_de_la_derniere_seance_du_groupe;
+
+        $id_dernier_seance_du_groupe = (DB::select("select max(id) as id_derniere_seance from seances where id_groupe = $id_groupe "));
+
+        if(count($id_dernier_seance_du_groupe)>0)
+        {
+            $id_dernier_seance_du_groupe = $id_dernier_seance_du_groupe[0]->id_derniere_seance;
+        }
+        foreach($eleves as $eleve)
+        {
+
+            $id_eleve = $eleve->id;
+
+            (DB::insert("insert into seances_eleves(num_seance,paye,payement,id_seance,id_eleve) 
+            values(\"$num_seance_groupe\",1,2000,\"$id_dernier_seance_du_groupe\",\"$id_eleve\") "));
+    
+
+
+        }
+
+
+        // return view('profile');
+
         return back();
 
     }
