@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 	<div class="page-header">
 		<h4 class="page-title">Détails sur le payement de l'élève : {!! $eleve->nom !!} {!! $eleve->prenom !!}</h4>
 	</div>
@@ -18,7 +19,6 @@
 					<hr>
 
 					<div class="row">
-
 						<div class="col-lg-6 ">
 							<p class="h3">Informations sur l'élève : </p>
 							<address>
@@ -76,12 +76,9 @@
 $(document).ready(function(){
     console.log($("#btnPrint").html());
     $("#btnPrint").on('click',function(){
-//            var divContents = $("#datable-1").html();
+//          var divContents = $("#datable-1").html();
             $('#table-print').printThis();
     })
 });
-
-
-
 </script>
 @endsection

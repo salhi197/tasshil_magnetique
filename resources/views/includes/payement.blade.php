@@ -12,17 +12,10 @@
 
 
 @foreach ($eleves_gratuits as $eleve_gratuit)
-
 	@if ($eleve_gratuit->id_eleve == $eleves_groupe[$i]->id)
-		
 		<p style="color:blueviolet; font-size:11px;" class="text-center alert alert-info">ne paye pas </p> 		
-		
 		<?php $il_paye++; ?>
-		
-		{{-- expr --}}
 	@endif
-
-	{{-- expr --}}
 @endforeach
 
 
@@ -32,16 +25,11 @@
 
 
 @if ($il_paye==0)
-	
-
 	<form target="_blank" class="form-inline" method="POST" action="/imprimer_bon">	
-
-		{{ csrf_field() }} 		
-
-		@if ($numero_de_la_seance_dans_le_mois%4==1 && $le_mois != 1)
-			
+		{{ csrf_field() }}
+		@if ($numero_de_la_seance_dans_le_mois%4==1 && $le_mois != 1)			
 			@foreach ($payments as $payment)
-				
+			
 				@if ($payment->id_eleve == $eleves_groupe[$i]->id && $payment->payment_du_mois >=0)		
 
 					<p style="color:green;" class="text-center"> Payé : {!! $payment->payment_du_mois !!} DA </p> 

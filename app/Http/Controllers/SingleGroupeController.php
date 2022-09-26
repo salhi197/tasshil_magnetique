@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Groupe;
 use App\Eleve;
+use App\Seanceseleve;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\rt\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -469,23 +470,51 @@ class SingleGroupeController extends Controller
     {
         $eleve = DB::select("select * from matricules where matricule=$matricule");
         $id_eleve = $eleve[0]->id_eleve;
-
         $id_groupe = $eleve[0]->id_groupe;
+
+        $eleve = Eleve::find($id_eleve);
+        $groupe = Groupe::find($id_groupe);
+        
 
         $id_dernier_seance_du_groupe = (DB::select("select max(id) as id_derniere_seance from seances where id_groupe = \"$id_groupe\" "));
         if(count($id_dernier_seance_du_groupe)>0)
         {
-
             $id_dernier_seance_du_groupe = $id_dernier_seance_du_groupe[0]->id_derniere_seance;
-
         }
+
+        $seance = Seanceseleve::where('id_eleve',$id_eleve)->where('id_seance',$id_dernier_seance_du_groupe)->first();
+
         (DB::update("update seances_eleves set presence =1, created_at = now()  
         where id_eleve = $id_eleve and id_seance = $id_dernier_seance_du_groupe "));
         
-
-        return view('home.profile');
+        return view('home.profile',compact('eleve','groupe','matricule','seance'));
 
     }
+
+    public function annuler($matricule,$seance)
+    {
+        $eleve = DB::select("select * from matricules where matricule=$matricule");
+        $id_eleve = $eleve[0]->id_eleve;
+        $id_groupe = $eleve[0]->id_groupe;
+        $eleve = Eleve::find($id_eleve);
+        $groupe = Groupe::find($id_groupe);
+
+
+        $id_dernier_seance_du_groupe = (DB::select("select max(id) as id_derniere_seance from seances where id_groupe = \"$id_groupe\" "));
+        if(count($id_dernier_seance_du_groupe)>0)
+        {
+            $id_dernier_seance_du_groupe = $id_dernier_seance_du_groupe[0]->id_derniere_seance;
+        }
+      
+        (DB::update("update seances_eleves set presence =1, created_at = now()  
+            where id = $seance"));
+        $seance = Seanceseleve::where('id_eleve',$id_eleve)->where('id_seance',$id_dernier_seance_du_groupe)->first();
+
+
+        return view('home.profile',compact('eleve','groupe','matricule','seance'));
+
+    }
+
 
     public function cloturer($id_groupe)
     {

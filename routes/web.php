@@ -54,6 +54,7 @@ Route::post('/home/single_groupe/valider_coches/ajax','SingleGroupeController@va
 Route::get('/home/groupes/{id}/tout','SingleGroupeController@toutes_seances');
 
 Route::get('/home/scann/{matricule}','SingleGroupeController@scanner');
+Route::get('/home/seance/annuler/{matricule}/{seance}','SingleGroupeController@annuler')->name('annuler');;
 Route::get('/home/cloturer/{id_groupe}','SingleGroupeController@cloturer')->name('cloturer');
 
 Route::post('/home/groupes/modifier/ajax','GroupeController@modifier');
